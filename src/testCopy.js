@@ -131,8 +131,8 @@ function createEnvironment() {
     floorMesh.rotation.x = -Math.PI / 2;
     scene.add(floorMesh);
 
-    const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper(5);
+    // scene.add(axesHelper);
 
 
     createObjects(scene);     

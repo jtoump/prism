@@ -8,10 +8,6 @@ body {
   overscroll-behavior: none;
 }
 
-a {
-  color: #fffdb3;
-  text-decoration: none;
-}
 
 a:hover {
   text-decoration: underline;
@@ -35,11 +31,11 @@ canvas {
   padding: 10px;
   box-sizing: border-box;
   text-align: center;
-  -moz-user-select: none;
+  /* -moz-user-select: none;
   -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  pointer-events: none;
+  -ms-user-select: none; */
+  /* user-select: none; */
+  /* pointer-events: none; */
   z-index: 1;
   /* TODO Solve this in HTML */
 }
@@ -49,10 +45,10 @@ a, button, input, select {
 }
 
 .dg.ac {
-  -moz-user-select: none;
+  /* -moz-user-select: none;
   -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  -ms-user-select: none; */
+  /* user-select: none; */
   z-index: 2 !important;
   /* TODO Solve this in HTML */
 }

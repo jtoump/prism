@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Gwern.net-Inspired Page with Side Notes</title>
+    <style>
+        .node {
+            font: 10px sans-serif;
+        }
+
+        .link {
+            stroke: steelblue;
+            stroke-opacity: 0.5;
+            fill: none;
+            pointer-events: none;
+        }
+    </style>
+    <link type="text/css" rel="stylesheet" href="css/gwern.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+</head>
+
+<body>
+
+    <div class="articleContainer">
+        <div class="left-column">
+            <!-- Empty left column -->
+        </div>
+
+        <div class="center-column">
+            <h1>Analyzing Anonymity in *Death Note*</h1>
+            
+            <p>The article explores how Light Yagami loses his anonymity through a series of mistakes while using the
+                Death Note. A theoretical lens, based on information theory, provides a framework for understanding each
+                slip-up. This text serves as an exploration of computer security concepts applied to fictional settings.
+            </p>
+
+            <h2>Understanding Light's Mistakes</h2>
+            <p>One fundamental error that <a href="javascript:void(0);" class="wiki-link" data-term="Light_Yagami">Light
+                    Yagami</a> made was failing to control the timing of his murders, creating patterns that helped L
+                deduce the time zone and location.</p>
+
+            <blockquote>
+                "If you change the world in even the slightest way, you leak information about yourself."
+            </blockquote>
+
+            <p>Another critical mistake occurred when he killed FBI agent Ray Penbar, effectively narrowing down the
+                suspect pool. L leveraged information theory principles to analyze each event as a data point, reducing
+                Light's anonymity bit by bit.</p>
+
+            <h2>Applying Information Theory</h2>
+            <p>L’s investigation was a search problem, starting with a large pool of suspects and methodically narrowing
+                it down. By observing patterns, L reduced the suspect pool from billions of people to one prime suspect.
+            </p>
+
+            <p>This process showcases how anonymity can be incrementally compromised. A <a href="javascript:void(0);"
+                    class="wiki-link" data-term="De-anonymization">de-anonymization technique</a> based on behavior
+                patterns could apply similarly in real-world data privacy contexts.</p>
+
+            <div class="footnote" id="footnote1">
+                <p><sup>1</sup> Light's scheduling of deaths provided clues for L to infer his nationality and timezone.
+                </p>
+            </div>
+
+            <div class="footnote" id="footnote2">
+                <p><sup>2</sup> De-anonymization can occur through consistent behavior, as seen when Light continued
+                    using the Death Note in predictable ways.</p>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <!-- Dynamic Side Notes -->
+            <div id="side-note-1" class="side-note">
+                <p><strong>Side Note 1:</strong> Information leaks from consistent actions, allowing de-anonymization.
+                </p>
+            </div>
+            <div id="side-note-2" class="side-note">
+                <p><strong>Side Note 2:</strong> De-anonymization relates to real-world privacy risks in digital
+                    behavior tracking.</p>
+            </div>
+
+            <!-- Floating window for Wikipedia content -->
+            <div id="floating-window" class="floating-window">
+                <h3>Wikipedia Info</h3>
+                <div id="wiki-content">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const width = 600;
+        const radius = width / 2;
+        const colorin = "green";
+        const colorout = "orange";
+
+        const tree = d3.cluster()
+            .size([2 * Math.PI, radius - 100]);
+
+        async function draw() {
+            const data = hierarchy(await fetch("flare.json").then(response => response.json()));
+
+            const root = tree(bilink(d3.hierarchy(data)
+                    .sort((a, b) => d3.ascending(a.height, b.height) || d3.ascending(a.data.name, b.data.name))
+                    ));
+
+            const svg = d3.select(".left-column")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", width)
+                .attr("viewBox", [-width / 2, -width / 2, width, width])
+                .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
+
+
+
+            const node = svg.append("g")
+                .selectAll()
+                .data(root.leaves())
+                .join("g")
+                .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`);
+
+            node.append("text")
+                .attr("dy", "0.31em")
+                .attr("x", d => d.x < Math.PI ? 6 : -6)
+                .attr("text-anchor", d => d.x < Math.PI ? "start" : "end")
+                .attr("transform", d => d.x >= Math.PI ? "rotate(180)" : null)
+                .attr("font-size", "0.4em")
+                .text(d => d.data.name)
+                .on("mouseover", overed)
+                .on("mouseout", outed)
+                .call(text => text.append("title").text(d => `${id(d)}
+    ${d.outgoing.length} outgoing
+    ${d.incoming.length} incoming`));
+
+            const link = svg.append("g")
+                .attr("stroke", "#ccc")
+                .attr("fill", "none")
+                .selectAll()
+                .data(root.leaves().flatMap(leaf => leaf.outgoing))
+                .join("path")
+                .attr("d", ([i, o]) => d3.lineRadial()
+                    .curve(d3.curveBundle.beta(0.85))
+                    .radius(d => d.y)
+                    .angle(d => d.x)(i.path(o)));
+
+            function overed(event, d) {
+                link.style("mix-blend-mode", null);
+                d3.select(this).attr("font-weight", "bold");
+                d3.selectAll(d.incoming.map(d => d.path)).attr("stroke", colorin).raise();
+                d3.selectAll(d.incoming.map(([d]) => d.text)).attr("fill", colorin).attr("font-weight", "bold");
+                d3.selectAll(d.outgoing.map(d => d.path)).attr("stroke", colorout).raise();
+                d3.selectAll(d.outgoing.map(([, d]) => d.text)).attr("fill", colorout).attr("font-weight", "bold");
+            }
+
+            function outed(event, d) {
+                link.style("mix-blend-mode", "multiply");
+                d3.select(this).attr("font-weight", null);
+                d3.selectAll(d.incoming.map(d => d.path)).attr("stroke", null);
+                d3.selectAll(d.incoming.map(([d]) => d.text)).attr("fill", null).attr("font-weight", null);
+                d3.selectAll(d.outgoing.map(d => d.path)).attr("stroke", null);
+                d3.selectAll(d.outgoing.map(([, d]) => d.text)).attr("fill", null).attr("font-weight", null);
+            }
+
+            function hierarchy(data, delimiter = ".") {
+                let root;
+                const map = new Map;
+                data.forEach(function find(data) {
+                    const {
+                        name
+                    } = data;
+                    if (map.has(name)) return map.get(name);
+                    const i = name.lastIndexOf(delimiter);
+                    map.set(name, data);
+                    if (i >= 0) {
+                        find({
+                            name: name.substring(0, i),
+                            children: []
+                        }).children.push(data);
+                        data.name = name.substring(i + 1);
+                    } else {
+                        root = data;
+                    }
+                    return data;
+                });
+                return root;
+            }
+
+            function bilink(root) {
+                const map = new Map(root.leaves().map(d => [id(d), d]));
+                for (const d of root.leaves()) d.incoming = [], d.outgoing = d.data.imports.map(i => [d, map.get(
+                    i)]);
+                for (const d of root.leaves())
+                    for (const o of d.outgoing) o[1].incoming.push(o);
+                return root;
+            }
+
+            function id(node) {
+                return `${node.parent ? id(node.parent) + "." : ""}${node.data.name}`;
+            }
+        }
+
+        draw();
+    </script>
+
+    <script>
+         function updateSideNotes() {
+            const references = document.querySelectorAll('.reference');
+            references.forEach(ref => {
+                const noteId = `side-note-${ref.dataset.ref}`;
+                const sideNote = document.getElementById(noteId);
+                if (sideNote) {
+                    const refPosition = ref.getBoundingClientRect();
+                    sideNote.style.top = `${window.scrollY + refPosition.top}px`;
+                }
+            });
+        }
+
+        // Update side notes on load and window resize
+        window.addEventListener('load', updateSideNotes);
+        window.addEventListener('resize', updateSideNotes);
+
+        function searchWikipedia(term) {
+            const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro&titles=${term}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const pages = data.query.pages;
+                    const page = pages[Object.keys(pages)[0]];
+                    const extract = page.extract;
+
+                    const wikiContent = document.getElementById("wiki-content");
+                    const floatingWindow = document.getElementById("floating-window");
+
+                    if (extract) {
+                        wikiContent.innerHTML = extract;
+                        floatingWindow.style.display = 'block';
+                    } else {
+                        wikiContent.innerHTML = "No information available.";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching Wikipedia data:", error);
+                    document.getElementById("wiki-content").innerHTML = "Error fetching data.";
+                });
+        }
+
+        // Event listener for clickable wiki links
+        const wikiLinks = document.querySelectorAll('.wiki-link');
+        wikiLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const term = this.getAttribute('data-term');
+                searchWikipedia(term);
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>
