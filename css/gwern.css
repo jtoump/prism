@@ -1,0 +1,105 @@
+/* Basic color and font scheme */
+:root {
+    --bg-color-light: #ffffff;
+    --text-color-light: #000000;
+    --link-color: #333;
+    --link-hover-color: #888;
+    --blockquote-bg: #f8f8f8;
+    --blockquote-border: #ccc;
+    --border-strong-color: #888;
+}
+
+/* General layout */
+.bodyArticle {
+    font-family: 'Source Serif Pro', serif;
+    background-color: var(--bg-color-light);
+    color: var(--text-color-light);
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    display: block;
+    justify-content: center;
+}
+
+/* Container for three-column layout */
+.articleContainer {
+    display: grid;
+    grid-template-columns: 1fr 935px 1fr;
+    gap: 20px;
+    width: 100%;
+    position: relative;
+    background-color: #ccc;
+}
+
+/* Column definitions */
+.left-column, .right-column {
+    background: var(--blockquote-bg);
+    padding: 10px;
+}
+
+.center-column {
+    background: var(--bg-color-light);
+    padding: 20px;
+    border-left: 2px solid var(--border-strong-color);
+    border-right: 2px solid var(--border-strong-color);
+    position: relative;
+}
+
+/* Typography and links */
+h1, h2 {
+    border-bottom: 2px solid var(--border-strong-color);
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--link-hover-color);
+}
+
+/* Blockquotes and code styling */
+blockquote {
+    background-color: var(--blockquote-bg);
+    border-left: 4px solid var(--blockquote-border);
+    padding: 1em;
+    margin: 1em 0;
+    font-style: italic;
+}
+
+code, pre {
+    background-color: var(--blockquote-bg);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Media Query: Collapse side columns on smaller screens */
+@media (max-width: 768px) {
+    .articleContainer {
+        grid-template-columns: 1fr; /* Single-column layout */
+    }
+
+    .left-column, .right-column {
+        display: none; /* Hide side columns */
+    }
+
+    .center-column {
+        border: none; /* Remove borders for a clean, full-width layout */
+        padding: 15px;
+    }
+}
+
+/* Media Query: Additional adjustments for very small screens */
+@media (max-width: 480px) {
+    .center-column {
+        padding: 10px; /* Reduce padding for smaller screens */
+    }
+}
