@@ -74,8 +74,8 @@ function init() {
 function setupScene() {
     const container = document.getElementById('container');
     scene = new THREE.Scene();
-    // scene.fog = new THREE.Fog(Math.random() * 0xffffff, 10, 90);
-    scene.fog = new THREE.FogExp2( "#fffdd0", 0.015 );
+    scene.fog = new THREE.Fog(Math.random() * 0xffffff, 10, 90);
+    // scene.fog = new THREE.FogExp2( "#fffdd0", 0.015 );
     
     container.appendChild(renderer.domElement);
 }
