@@ -10,6 +10,7 @@ PRISM is a personal project I had in WIP for a few years. Here is the repo where
 
 
 
+View on Github Pages : https://jtoump.github.io/prism/index.html
 
 
 
