@@ -15,10 +15,10 @@
 </head>
 
 <body>
-    <div id="dark-mode-toggle" title="Toggle Dark Mode">
-        L/D
-    </div>
-	
+	<div id="dark-mode-toggle" title="Toggle Dark Mode">
+		L/D
+	</div>
+
 	<div id="container">
 		<canvas id="threejs-canvas"></canvas>
 
@@ -116,40 +116,56 @@
 					<div class="right-column"></div>
 					<div class="center-column">
 						<h1>purpose</h1>
-						
-						<p>The article explores how Light Yagami loses his anonymity through a series of mistakes while using the Death Note. A theoretical lens, based on information theory, provides a framework for understanding each slip-up. This text serves as an exploration of computer security concepts applied to fictional settings.</p>
-						<p>The article explores how Light Yagami loses his anonymity through a series of mistakes while using the Death Note. A theoretical lens, based on information theory, provides a framework for understanding each slip-up. This text serves as an exploration of computer security concepts applied to fictional settings.</p>
 
-						<blockquote>The true purpose of these projects is the joy of creation—the fulfillment that comes
-							from bringing something new into existence.
-							It’s the drive to shape ideas into something almost tangible, to channel energy into forming
-							what once was only a concept. This is what fuels me.
-							(GPT4.0;OpenAI,2024) </blockquote>
+						<p>
+							At the moment, this is just a work-in-progress project.
+							It might eventually evolve into a collection of things that interest me.
+							For now, I am focused on building the technology stack and automating the process of turning
+							ideas into pages.
+						</p>
+						<blockquote>
+							My true inspiration in terms of style and vibe comes from
+							<a href="https://gwern.net/index">gwern.net</a>.
+							If OpenAI weren’t a thing, this project would have been much more challenging!
+						</blockquote>
 					</div>
 					<div class="left-column"></div>
 
 				</div>
 			</div>
 			<div class="row">
-				
-				
-				<div class="card" onclick="location.href='./page.html'">
-					
+
+
+				<div class="card" onclick="location.href='./pages/CV.html'">
+
 
 					<div class="image-container">
 
 						<div class="member-img">
-							<img src="https://i.pinimg.com/originals/f6/45/51/f6455156089967c9b421335e13a00d6f.jpg">
+							<img src="data/img/cv_abstract.webp">
 						</div>
 					</div>
 
 					<div class="text-content">
-						<p>Going to the nature is going home</p>
+						<p>My CV</p>
 					</div>
 
 				</div>
-			
-				<div class="card" >
+
+				<div class="card" onclick="location.href='./pages/test.html'">
+
+
+					<div class="image-container">
+
+						<div class="member-img">
+							<img src="data/img/cv_abstract.webp">
+						</div>
+					</div>
+
+					<div class="text-content">
+						<p>Just A Test</p>
+					</div>
+
 				</div>
 				<div class="card"></div>
 				<div class="card"></div>
@@ -177,15 +193,14 @@
 
 
 <script type="text/javascript">
-
-document.querySelector('.card').addEventListener('click', () => {
-    window.location.href = './page.html';
-});
+	// document.querySelector('.card').addEventListener('click', () => {
+	//     window.location.href = './page.html';
+	// });
 
 	const darkModeToggle = document.getElementById('dark-mode-toggle');
-darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-});
+	darkModeToggle.addEventListener('click', () => {
+		document.body.classList.toggle('dark-mode');
+	});
 	// window.addEventListener('wheel', updateCamera);
 
 	// function updateCamera(ev) {

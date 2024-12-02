@@ -1,6 +1,69 @@
 import pypandoc
 import re
 import datetime
+import os
+import json
+
+def find_md_files(directory):
+    """
+    Find all Markdown files (.md) in the given directory and its subdirectories.
+
+    Args:
+        directory (str): The directory to search in.
+
+    Returns:
+        list: A list of file paths for all .md files.
+    """
+    md_files = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.md'):
+                md_files.append(os.path.join(root, file))
+    return md_files
+
+
+
+
+
+def append_to_json(file_list, json_path):
+    """
+    Append the Markdown file names to a JSON file with the current date if the key does not exist.
+
+    Args:
+        file_list (list): List of file paths to add to the JSON file.
+        json_path (str): Path to the JSON file.
+    """
+    # Load existing data or initialize an empty dictionary
+    if os.path.exists(json_path):
+        with open(json_path, 'r', encoding='utf-8') as f:
+            try:
+                data = json.load(f)
+            except json.JSONDecodeError:
+                data = {}
+    else:
+        data = {}
+
+    # Current date
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+    filesToProcess = []
+
+    # Add new files to the JSON if not already present
+    for file_path in file_list:
+        file_name = os.path.basename(file_path)  # Extract just the file name
+        if file_name not in data:
+            data[file_name] = current_date
+            filesToProcess.append(file_name)
+
+    # Write the updated data back to the JSON file
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=4)
+
+    print(f"Updated JSON file: {json_path}")
+
+    return filesToProcess
+
+
 
 def markdown_to_html_with_template(md_file, template_file, output_html_file):
   # Step 1: Read the Markdown content
@@ -43,8 +106,9 @@ def markdown_to_html_with_template(md_file, template_file, output_html_file):
             side_notes+=line
             continue
         elif line.startswith('<p><img class="articleImage"'):
-            articleImage = line[3:-4]
-            continue
+            line = line[3:-4]
+            
+            # continue
 
         # Process content based on the current section
         if current_section == "tags":
@@ -145,8 +209,18 @@ def process_side_notes(content):
 
 
 # Example usage
-markdown_file = "pages/CV.md"          # Path to your Markdown file
+markdown_file = "data/md/CV.md"          # Path to your Markdown file
 template_file = "templates/page.html"   # Path to your HTML template
 output_html_file = "output.html"  # Desired output HTML file path
 
-markdown_to_html_with_template(markdown_file, template_file, output_html_file)
+
+mdFiles = find_md_files("data/md")
+filesToProcess = append_to_json(mdFiles,"data/json/log.json")
+
+for file_ in filesToProcess :
+
+    print(file_)
+    file_name = os.path.splitext(os.path.basename(file_))[0]
+
+    output_html_file = "pages/"+file_name+".html"
+    markdown_to_html_with_template("data/md/"+file_, template_file, output_html_file)

@@ -1,6 +1,5 @@
 # Curriculum Vitae not a Résumé
 
-<img class="articleImage" src="./docs/cv_abstract.webp" alt="Picture"></img>
 
 
 
@@ -13,6 +12,9 @@
 ## Abstract
 
 Spatial Data Scientist with experience delivering advanced geospatial and algorithmic solutions for major global clients across technology, life sciences, and construction industries. Proven track record in leading complex projects from conception to deployment, with expertise in spatial and network analysis, optimization, and algorithmic development. A quick learner and adaptable problem-solver, skilled at leading R&D initiatives that combine multidisciplinary methods and techniques. Passionate about the transformative role of emerging AI research and how the new technologies can drive innovative solutions.
+
+<img class="articleImage" src="./docs/cv_abstract.webp" alt="Picture"></img>
+
 
 ## Professional Experience 
 
