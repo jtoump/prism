@@ -56,5 +56,5 @@ Please reach out if anything!
 
 - [gwern.net](https://gwern.net/)
 - [https://obsidian.md/](https://obsidian.md/)
-
+- [https://chatgpt.com/](https://chatgpt.com/) Well it is important to highlight that I am not a front-end specialist. Chat GPT was much of a help in building and understanding divs structure, text alignment etc. 
 
