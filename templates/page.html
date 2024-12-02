@@ -4,9 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Gwern.net-Inspired Page with Side Notes</title>
+    <title>My CV</title>
     <style>
+        h4 {
+            margin: 0em;
 
+        }
+
+        h5 {
+            margin: 0em;
+            text-align: right;
+        }
     </style>
     <link type="text/css" rel="stylesheet" href="css/gwern.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -31,84 +39,33 @@
                 <!-- Empty left column -->
             </div>
 
+
+
+
             <div class="center-column">
-                <h1>Analyzing Anonymity in *Death Note*</h1>
 
-                <img class="articleImage" src="docs/test.webp" alt="Paris" >
+                <div class="article-header">
+                    <h1> {{TITLE}} </h1>
 
+                    <div class="tags-section">
+                        {{TAGS}}
+                        <div class="date">
+                            {{DATE}}
+                        </div>
 
-                <p>How many times were you frustrated while looking
-                    out for a good collection of programming/algorithm
-                    /interview questions? What did you expect and what
-                    did you get? This portal has been created to
-                    provide well written, well thought and well
-                    explained solutions for selected questions.
-                    An IIT Roorkee alumnus and founder of GeeksforGeeks.
-                    He loves to solve programming problems in most
-                    efficient ways. Apart from GeeksforGeeks, he has
-                    worked with DE Shaw and Co. as a software developer
-                    and JIIT Noida as an assistant professor. It is a
-                    good platform to learn programming. It is an
-                    educational website. Prepare for the Recruitment
-                    drive of product based companies like Microsoft,
-                    Amazon, Adobe etc with a free online placement
-                    preparation course.
-                </p>
+                    </div>
 
-                <h2>Understanding Light's Mistakes</h2>
-                <p class="reference" data-ref="1">One fundamental error that <a class="wiki-link"
-                        data-term="Light_Yagami">Light
-                        Yagami</a> made was failing to control the timing of his murders, creating patterns that helped
-                    L
-                    deduce the time zone and location.</p>
-
-                
-
-                <blockquote class="reference" data-ref="2">
-                    "If you change the world in even the slightest way, you leak information about yourself."
-                </blockquote>
-
-                <p>Another critical mistake occurred when he killed FBI agent Ray Penbar, effectively narrowing down the
-                    suspect pool. L leveraged information theory principles to analyze each event as a data point,
-                    reducing
-                    Light's anonymity bit by bit.</p>
-
-                <h2>Applying Information Theory</h2>
-                <p>L’s investigation was a search problem, starting with a large pool of suspects and methodically
-                    narrowing
-                    it down. By observing patterns, L reduced the suspect pool from billions of people to one prime
-                    suspect.
-                </p>
-
-                <p>This process showcases how anonymity can be incrementally compromised. A <a
-                        href="javascript:void(0);" class="wiki-link" data-term="De-anonymization">de-anonymization
-                        technique</a> based on behavior
-                    patterns could apply similarly in real-world data privacy contexts.</p>
-
-                <div class="footnote" id="footnote1">
-                    <p><sup>1</sup> Light's scheduling of deaths provided clues for L to infer his nationality and
-                        timezone.
-                    </p>
+                </div>
+                <div class="abstract">
+                    {{ABSTRACT}}
                 </div>
 
-                <div class="footnote" id="footnote2">
-                    <p><sup>2</sup> De-anonymization can occur through consistent behavior, as seen when Light continued
-                        using the Death Note in predictable ways.</p>
-                </div>
+                {{CONTENT}}
+
             </div>
-
             <div class="right-column">
                 <!-- Dynamic Side Notes -->
-                <div id="side-note-1" class="side-note">
-                    <p><strong>Side Note 1:</strong> Information leaks from consistent actions, allowing
-                        de-anonymization.
-                    </p>
-                </div>
-                <div id="side-note-2" class="side-note">
-                    <p><strong>Side Note 2:</strong> De-anonymization relates to real-world privacy risks in digital
-                        behavior tracking.</p>
-                </div>
-
+                {{SIDE-NOTES}}
 
             </div>
         </div>
@@ -233,13 +190,26 @@
             const references = document.querySelectorAll('.reference');
             references.forEach(ref => {
                 const noteId = `side-note-${ref.dataset.ref}`;
-
                 const sideNote = document.getElementById(noteId);
-                if (sideNote) {
-                    console.log(sideNote)
 
+                if (sideNote) {
                     const refPosition = ref.getBoundingClientRect();
-                    sideNote.style.top = `${window.scrollY + refPosition.top}px`;
+
+                    // Get the previous element
+                    const previousElement = ref.previousElementSibling;
+
+                    if (previousElement) {
+                        const previousHeight = previousElement.getBoundingClientRect();
+
+                        console.log(`Previous element height:`, previousHeight);
+                        console.log(`Current reference position:`, refPosition);
+
+                        // Adjust the side note's position relative to the previous element
+                        sideNote.style.top = `${window.scrollY + previousHeight.top}px`;
+                    } else {
+                        // Fallback if there's no previous element
+                        sideNote.style.top = `${window.scrollY + refPosition.top}px`;
+                    }
                 }
             });
         }
@@ -265,7 +235,7 @@
         });
     </script>
 
-<script  src="src/wikiSearch.js"></script>
+    <script src="src/wikiSearch.js"></script>
 </body>
 
 </html>
