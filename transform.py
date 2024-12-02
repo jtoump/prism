@@ -87,7 +87,7 @@ def markdown_to_html_with_template(md_file, template_file, output_html_file):
     articleImage = ""
     for line in html_content.splitlines():
         line = line.strip()
-        print(line)
+        # print(line)
 
         # Detect section headings
         if line.startswith("<h1") and line.endswith("</h1>"):
@@ -208,19 +208,23 @@ def process_side_notes(content):
     return re.sub(side_note_pattern, replace_with_ref, content)
 
 
-# Example usage
-markdown_file = "data/md/CV.md"          # Path to your Markdown file
-template_file = "templates/page.html"   # Path to your HTML template
-output_html_file = "output.html"  # Desired output HTML file path
 
 
-mdFiles = find_md_files("data/md")
-filesToProcess = append_to_json(mdFiles,"data/json/log.json")
 
-for file_ in filesToProcess :
+if __name__ == "__main__":
 
-    print(file_)
-    file_name = os.path.splitext(os.path.basename(file_))[0]
+    # Path to your HTML template    
+    template_file = "templates/page.html"   
 
-    output_html_file = "pages/"+file_name+".html"
-    markdown_to_html_with_template("data/md/"+file_, template_file, output_html_file)
+    # read all the md files under the data/md directory  
+    mdFiles = find_md_files("data/md")
+
+    # update the log.json for the files that have been processed already 
+    filesToProcess = append_to_json(mdFiles,"data/json/log.json")
+
+    for file_ in filesToProcess :
+
+        file_name = os.path.splitext(os.path.basename(file_))[0]
+
+        output_html_file = "pages/"+file_name+".html"
+        markdown_to_html_with_template("data/md/"+file_, template_file, output_html_file)
