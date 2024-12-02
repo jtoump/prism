@@ -1,3 +1,6 @@
+/* Trying to replicate gwern.net style */
+
+
 /* Basic color and font scheme */
 :root {
     --bg-color-light: #ffffff;
@@ -24,7 +27,7 @@
 .card {
 
     display: block;
-    max-width: 25%;
+    /* max-width: 20%; */
     margin-bottom: 1.5rem;
     position: relative;
     padding-right: .5rem;
@@ -34,7 +37,7 @@
     margin-right: auto;
     height: 492px;
     min-width: 365px;
-    max-width: 365px;
+    max-width: 355px;
     opacity: 1.0;
     transition: 1.0s;
     background-color: var(--bg-color-light);
