@@ -35,9 +35,9 @@ PRISM is a personal project I had in WIP for a few years. Here is the repo where
 You might be interest for the tech used. I will try to provide as much information as possible for the following in dedicated pages 
 
 - Procedural City-like Generation
-  - 	[Buildings & Signs](./src/buildings.js)
-  - 	[Roads](roads.js)
-  - 	[Moving Vehicles](./src/car.js)
+  - [Buildings & Signs](./src/buildings.js)
+  - [Roads](roads.js)
+  - [Moving Vehicles](./src/car.js)
 - [Markdown to pages (python)](transform.py)
 
 
