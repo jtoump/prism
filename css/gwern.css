@@ -484,22 +484,98 @@ g text {
 
 }
 
+.filter-area{
+    display: flex;
+    margin: 20px 0;
+    background-color: var(--blockquote-bg);
+    /* background-color: #e5e5f7; */
+    opacity: 0.8;
+    background-image:  
+                    linear-gradient(30deg, #444cf7 12%, transparent 12.5%, transparent 87%, #444cf7 87.5%, #444cf7), 
+                    linear-gradient(150deg, #444cf7 12%, transparent 12.5%, transparent 87%, #444cf7 87.5%, #444cf7), 
+                    linear-gradient(30deg, #444cf7 12%, transparent 12.5%, transparent 87%, #444cf7 87.5%, #444cf7), 
+                    linear-gradient(150deg, #444cf7 12%, transparent 12.5%, transparent 87%, #444cf7 87.5%, #444cf7), 
+                    linear-gradient(60deg, #444cf777 25%, transparent 25.5%, transparent 75%, #444cf777 75%, #444cf777), 
+                    linear-gradient(60deg, #444cf777 25%, transparent 25.5%, transparent 75%, #444cf777 75%, #444cf777);
+    background-size: 20px 35px;
+    background-position: 0 0, 0 0, 10px 18px, 10px 18px, 0 0, 10px 18px;
+
+
+}
+
 .filter-buttons {
     display: block;
-    gap: 10px;
-    margin: 20px 0;
-    text-align: left;
+
+    width: 25%;
+    background-color: var(--blockquote-bg);
+    padding: 10px;
+    /* box-shadow: 0 0 10px 2px #ff8800; */
+
+}
+
+.tagScreen {
+    margin: 10px;
+    padding: 10px;
+    position: relative;
+    width: 75%;
+    /* height: 300px; Adjust height as needed */
+    background-color: #000000; /* Black background */
+    color: #00ff0031; /* Matrix-style green text */
+    font-family: 'Courier New', Courier, monospace; /* Retro font */
+    font-size: 10px; /* Adjust font size */
+    display: flex; /* Center content */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    overflow: hidden; /* Hide overflow for scanline effect */
+
+    /* Glowing text effect */
+    text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00, 
+                 0 0 30px #00FF00, 0 0 40px #00FF00;
+
+    /* CRT scanline effect */
+    background: 
+        linear-gradient(transparent 95%, rgba(0, 255, 0, 0.1) 96%) 0 0 / 100% 4px,
+        #000;
+    
+    /* box-shadow: 0 0 10px 2px #ff8800; */
+
+}
+
+.tagScreen::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(transparent 90%, rgba(0, 255, 0, 0.05) 92%) 0 0 / 100% 2px;
+    pointer-events: none; /* Ensure it doesn’t block interactions */
+    z-index: 1; /* Keep it above background but below text */
+    opacity: 0.8; /* Subtle effect */
+}
+
+.tagScreen::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.1) 0%, transparent 70%);
+    mix-blend-mode: overlay; /* Add glow effect */
+    pointer-events: none;
+    z-index: 1;
 }
 
 .filter-button {
     position: relative;
     width: 40px;
     height: 40px;
-    background: rgba(0, 255, 153, 0.2);
-    border: 2px solid #00ff99;
+    background: var(--text-color);
+    border: 2px inset  var(--text-color);
     border-radius: 50%;
     cursor: pointer;
-    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, background 0.3s, box-shadow 0.3s, opacity 0.3s,color 0.3s;
 }
 
 .filter-button::before {
@@ -510,17 +586,22 @@ g text {
     transform: translate(-50%, -50%) rotate(0deg);
     font-size: 24px;
     font-weight: bold;
-    color: #00ff99;
+    color: var(--blockquote-bg);
     transition: transform 0.3s;
 }
 
+
+
 .filter-button.active {
-    background: rgba(0, 255, 153, 0.5);
-    box-shadow: 0 0 10px 2px #00ff99;
+    color: var(--text-color);
+    background: rgba(255, 123, 0, 0.5);
+    box-shadow: 2px 2px 1px 1px var(--text-color);
+    opacity: 1.0;
 }
 
 .filter-button.active::before {
     content: '×';
+    color:var(--text-color);
     transform: translate(-50%, -50%) rotate(90deg);
 }
 
@@ -600,8 +681,8 @@ g text {
     width: 5px;
     height: 24px;
     /* border-radius: 50%; */
-    border: 0.5px solid #00ff99;
-    box-shadow: 0 0 1.5px #00ff99;
+    border: 0.5px solid var(--text-color);
+    box-shadow: 0 0 1.5px var(--text-color);
 }
 
 .tag-red {
@@ -630,6 +711,7 @@ g text {
     grid-column: span 2;
     grid-row: span 1;
     aspect-ratio: unset;
+    min-height: 60px;
 }
 
 @media (max-width: 768px) {
@@ -681,3 +763,5 @@ g text {
     font-size: 2rem;
     margin-bottom: 5px;
 }
+
+

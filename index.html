@@ -134,16 +134,28 @@
 				</div>
 			</div>
 
-			<div class="filter-buttons">
-				<button class="filter-button" onclick="toggleFilter(this, 'red')" style="background: red;"></button>
-				<button class="filter-button" onclick="toggleFilter(this, 'blue')" style="background: blue;"></button>
-				<button class="filter-button" onclick="toggleFilter(this, 'green')" style="background: green;"></button>
+			<div class="filter-area">
 
+				<div class="filter-buttons">
+					<button class="filter-button" onclick="toggleFilter(this, 'red')" style="background: red;"></button>
+					<button class="filter-button" onclick="toggleFilter(this, 'blue')"
+						style="background: blue;"></button>
+					<button class="filter-button" onclick="toggleFilter(this, 'green')"
+						style="background: green;"></button>
+					<button class="filter-button" onclick="toggleFilter(this, 'white')"
+						style="background: rgb(86, 88, 86);"></button>
+
+				</div>
+				<div class="tagScreen">
+					� � � � � � � � � � � � � � � � � � � � � � � � 
+					� � � � � � � � � � � � � � � � � � � � � � � �  
+				</div>
 
 			</div>
+
 			<div class="grid-container">
 				<a href="pages/CV.html" class="grid-item">
-					<img class="contentImage" src="data/img/cv_abstract.webp"/>
+					<img class="contentImage" src="data/img/cv_abstract.webp" />
 
 					<div class="tag-container">
 						<div class="tag tag-red"></div>
@@ -204,7 +216,7 @@
 				</div>
 				<div class="grid-item wide">
 					<div class="title">Wide Element (2x1)</div>
-				</div>	
+				</div>
 
 			</div>
 
@@ -255,6 +267,7 @@
 		items.forEach(item => {
 			// Get all the tags applied to this item
 			const itemTags = Array.from(item.querySelectorAll('.tag')).map(tagElement =>
+				tagElement.classList.contains('tag-white') ? 'white' :
 				tagElement.classList.contains('tag-red') ? 'red' :
 				tagElement.classList.contains('tag-blue') ? 'blue' :
 				tagElement.classList.contains('tag-green') ? 'green' : null
