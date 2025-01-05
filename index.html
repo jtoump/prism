@@ -133,52 +133,75 @@
 
 				</div>
 			</div>
-			<div class="row">
+
+			<div class="filter-buttons">
+				<button class="filter-button" onclick="toggleFilter(this, 'red')" style="background: red;"></button>
+				<button class="filter-button" onclick="toggleFilter(this, 'blue')" style="background: blue;"></button>
+				<button class="filter-button" onclick="toggleFilter(this, 'green')" style="background: green;"></button>
 
 
-				<div class="card" onclick="location.href='./pages/CV.html'">
-
-
-					<div class="image-container">
-
-						<div class="member-img">
-							<img src="data/img/cv_abstract.webp">
-						</div>
+			</div>
+			<div class="grid-container">
+				<a href="page1.html" class="grid-item">
+					<div class="tag-container">
+						<div class="tag tag-red"></div>
+						<div class="tag tag-blue"></div>
 					</div>
-
-					<div class="text-content">
-						<p>My CV</p>
+					<div class="title">Page 1</div>
+				</a>
+				<a href="page2.html" class="grid-item">
+					<div class="tag-container">
+						<div class="tag tag-blue"></div>
+						<div class="tag tag-green"></div>
 					</div>
+					<div class="title">Page 2</div>
+				</a>
+				<a href="page3.html" class="grid-item large">
+					<div class="tag-container">
+						<div class="tag tag-red"></div>
+					</div>
+					<div class="title">Page 3</div>
+				</a>
+				<a href="page4.html" class="grid-item">
+					<div class="tag-container">
+						<div class="tag tag-blue"></div>
+					</div>
+					<div class="title">Page 4</div>
+				</a>
 
+
+				<a href="page5.html" class="grid-item">
+					<div class="tag-container">
+						<div class="tag tag-red"></div>
+						<div class="tag tag-green"></div>
+					</div>
+					<div class="title">Page 5</div>
+				</a>
+				<a href="page6.html" class="grid-item">
+					<div class="tag-container">
+						<div class="tag tag-blue"></div>
+					</div>
+					<div class="title">Page 6</div>
+				</a>
+
+				<div class="grid-item time-widget">
+					<div class="tag-container">
+						<div class="tag tag-white"></div>
+					</div>
+					<div id="current-time">--:--:--</div>
 				</div>
 
-				<div class="card" onclick="location.href='./pages/test.html'">
-
-
-					<div class="image-container">
-
-						<div class="member-img">
-							<img src="data/img/Test.svg.png">
-						</div>
+				<div class="grid-item weather-widget">
+					<div class="tag-container">
+						<div class="tag tag-white"></div>
 					</div>
-
-					<div class="text-content">
-						<p>Just A Test</p>
-					</div>
-
+					<div class="icon" id="weather-icon">☀️</div>
+					<div id="weather-temp">--°C</div>
+					<div id="weather-desc">Loading...</div>
 				</div>
-				<div class="card"></div>
-				<div class="card"></div>
-				<div class="card"></div>
-				<div class="card"></div>
-
-
-				<div class="card"></div>
-				<div class="card"></div>
-				<div class="card"></div>
-				<div class="card"></div>
-				<div class="card"></div>
-				<div class="card"></div>
+				<div class="grid-item wide">
+					<div class="title">Wide Element (2x1)</div>
+				</div>	
 
 			</div>
 
@@ -209,6 +232,106 @@
 	// 		window.camera.position.y += scale;
 	// 	}
 	// }
+	let activeFilters = [];
+
+	function toggleFilter(button, tag) {
+
+		const items = document.querySelectorAll('.grid-item');
+
+		// Toggle the active filter
+		if (activeFilters.includes(tag)) {
+			activeFilters = activeFilters.filter(f => f !== tag); // Remove tag from active filters
+			button.classList.remove('active'); // Remove highlight
+		} else {
+			activeFilters.push(tag); // Add tag to active filters
+			button.classList.add('active'); // Highlight the button
+		}
+		console.log(activeFilters)
+
+		// Apply filtering logic
+		items.forEach(item => {
+			// Get all the tags applied to this item
+			const itemTags = Array.from(item.querySelectorAll('.tag')).map(tagElement =>
+				tagElement.classList.contains('tag-red') ? 'red' :
+				tagElement.classList.contains('tag-blue') ? 'blue' :
+				tagElement.classList.contains('tag-green') ? 'green' : null
+			).filter(Boolean); // Filter out invalid tags
+
+			// Show items if no filters are active or if the item matches any active filter
+			if (activeFilters.length === 0 || activeFilters.some(filter => itemTags.includes(filter))) {
+				item.classList.remove('hidden'); // Show the item
+				startTypingEffect(item.querySelector('.title')); // Apply typing effect to visible items
+			} else {
+				item.classList.add('hidden'); // Hide the item
+			}
+		});
+	}
+
+
+
+
+	function startTypingEffect(element) {
+		if (!element || element.dataset.typing === 'true' || element.textContent.trim() === element.getAttribute(
+				'data-original-text')) return;
+
+		const text = element.getAttribute('data-original-text') || element.textContent.trim();
+		element.setAttribute('data-original-text', text); // Store original text if not already set
+		element.textContent = ''; // Clear the current text
+		element.dataset.typing = 'true'; // Mark the element as being typed
+		let index = 0;
+
+		const typingSpeed = () => Math.random() * (120 - 50) + 50; // Random typing speed
+
+		function type() {
+			if (index < text.length) {
+				element.textContent += text[index];
+				index++;
+				setTimeout(type, typingSpeed());
+			} else {
+				element.dataset.typing = 'false'; // Typing complete
+			}
+		}
+
+		type();
+	}
+
+	function updateTime() {
+		const timeElement = document.getElementById('current-time');
+		const now = new Date();
+		const hours = String(now.getHours()).padStart(2, '0');
+		const minutes = String(now.getMinutes()).padStart(2, '0');
+		const seconds = String(now.getSeconds()).padStart(2, '0');
+		timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+	}
+
+	setInterval(updateTime, 1000); // Update time every second
+	updateTime(); // Set initial time
+
+	async function updateWeather() {
+		const weatherIcon = document.getElementById('weather-icon');
+		const weatherTemp = document.getElementById('weather-temp');
+		const weatherDesc = document.getElementById('weather-desc');
+
+		try {
+			const response = await fetch(
+				'https://api.open-meteo.com/v1/forecast?latitude=40.6401&longitude=22.9444&current_weather=true');
+			const data = await response.json();
+			const currentWeather = data.current_weather;
+
+			weatherTemp.textContent = `${Math.round(currentWeather.temperature)}°C`;
+			weatherDesc.textContent = currentWeather.weathercode ? 'Clear Sky' : 'Unknown';
+			weatherIcon.textContent = currentWeather.weathercode === 0 ? '☀️' : '🌥️';
+		} catch (error) {
+			weatherTemp.textContent = '--°C';
+			weatherDesc.textContent = 'Error loading weather';
+			weatherIcon.textContent = '❌';
+		}
+	}
+
+	setInterval(updateTime, 1000); // Update time every second
+	updateTime(); // Set initial time
+	updateWeather(); // Fetch initial weather
+	setInterval(updateWeather, 600000); // Update weather every 10 minut
 </script>
 
 
