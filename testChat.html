@@ -1,13 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+  <meta charset="UTF-8" />
+  <title>Old PC Game Synth Panel</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000; /* black border, old-school feel */
+      user-select: none; /* prevent text selection during drags */
+      font-family: monospace;
+      color: #fff;
+    }
 
-<script src="test.js" type="module"></script>
+    /* A “panel” for everything, sized to match the background image. */
+    .panel {
+      position: relative;
+      width: 800px;
+      height: 400px;
+      margin: 20px auto;
+      border: 4px solid #333;
+      box-sizing: content-box; /* so border doesn't affect size */
+    }
+
+    /* The background image of an old synth or any retro style */
+    #bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 400px;
+      image-rendering: pixelated; /* gives that blocky, old-game vibe */
+    }
+
+    /* Example “module” images or UI elements, absolutely positioned */
+    .module-img {
+      position: absolute;
+      image-rendering: pixelated; 
+    }
+
+    /* Ports: also just images. We can store data attributes for id. */
+    .port-img {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      image-rendering: pixelated;
+      cursor: pointer; /* show clickable */
+    }
+
+    /* The cable: we’ll drag this image around. 
+       In a real game, you might have separate images for different cable segments,
+       or an animation, etc. */
+    #cable-img {
+      position: absolute;
+      width: 64px; /* or however big your cable sprite is */
+      height: 64px;
+      top: 150px;  /* initial position guess */
+      left: 350px;
+      cursor: grab;
+      image-rendering: pixelated;
+      z-index: 10; /* on top of everything */
+    }
+
+    /* A knob image, if you want to show rotating knobs, etc. */
+    .knob-img {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      image-rendering: pixelated;
+      cursor: pointer;
+    }
+  </style>
+</head>
 <body>
-    
+
+<div class="panel">
+  <!-- 1) Background image for the entire synth panel -->
+  <img id="bg-image" src="data/img/synth.webp" alt="Synth Background" />
+
+  <!-- 2) Modules or other UI images (totally optional). 
+         Suppose these are small images of an oscillator or filter, placed around. -->
+  <img class="module-img" src="module-osc.png"
+       alt="Oscillator Module"
+       style="top: 50px; left: 50px; width: 128px; height: 128px;" />
+  <img class="module-img" src="module-filter.png"
+       alt="Filter Module"
+       style="top: 50px; left: 300px; width: 128px; height: 128px;" />
+
+  <!-- 3) Ports as images. Let’s give each a data-port-id. 
+         In a real scenario, you might show a tiny circle or jack image. -->
+  <img class="port-img"
+       src="port.png"
+       alt="Oscillator Output"
+       data-port-id="oscOut"
+       style="top: 80px; left: 140px;" />
+  <img class="port-img"
+       src="port.png"
+       alt="Filter Input"
+       data-port-id="filterIn"
+       style="top: 80px; left: 390px;" />
+
+  <!-- 4) A cable image that we can drag around. 
+         In a real system, you might have many cables or one cable per connection. -->
+  <img id="cable-img"
+       src="cable.png"
+       alt="Cable" />
+
+  <!-- 5) A knob image just for example. 
+         You can do rotation on it in JS if you want a rotating effect. -->
+  <img class="knob-img"
+       src="knob.png"
+       alt="Knob"
+       style="top: 200px; left: 150px;" />
+</div>
+
+<script>
+/* 
+  Basic drag-and-drop logic for the cable image:
+  - We track the mouse offset so the cable “sticks” under the pointer.
+  - When we let go of the cable, we see if we dropped near a port.
+  - If near a port, we "snap" it or do something. (Simplified here.)
+*/
+
+/** Track states for dragging */
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+const cableImg = document.getElementById('cable-img');
+
+/** On mousedown, start dragging if clicked on the cable image */
+cableImg.addEventListener('mousedown', (event) => {
+  isDragging = true;
+  // Where did we click relative to the cable's top-left?
+  const rect = cableImg.getBoundingClientRect();
+  dragOffsetX = event.clientX - rect.left;
+  dragOffsetY = event.clientY - rect.top;
+  cableImg.style.cursor = 'grabbing';
+});
+
+/** On mousemove, if dragging, move the cable image */
+document.addEventListener('mousemove', (event) => {
+  if (isDragging) {
+    // new positions for cable, so it moves with the mouse
+    const newLeft = event.clientX - dragOffsetX;
+    const newTop  = event.clientY - dragOffsetY;
+    cableImg.style.left = newLeft + 'px';
+    cableImg.style.top = newTop + 'px';
+  }
+});
+
+/** On mouseup, stop dragging. Check if we dropped near a port. */
+document.addEventListener('mouseup', (event) => {
+  if (isDragging) {
+    isDragging = false;
+    cableImg.style.cursor = 'grab';
+
+    // Check if we dropped near any port images
+    const ports = document.querySelectorAll('.port-img');
+    let droppedOnPort = null;
+    ports.forEach((port) => {
+      const portRect = port.getBoundingClientRect();
+      const portCenterX = portRect.left + portRect.width / 2;
+      const portCenterY = portRect.top + portRect.height / 2;
+      const dist = Math.hypot(
+        (event.clientX - portCenterX),
+        (event.clientY - portCenterY)
+      );
+      // e.g. if within 20px of the port center, consider it "connected"
+      if (dist < 20) {
+        droppedOnPort = port;
+      }
+    });
+
+    if (droppedOnPort) {
+      // Snap cable to that port’s coordinates, or do something more advanced
+      const rect = droppedOnPort.getBoundingClientRect();
+      const snapLeft = rect.left + rect.width / 2 - cableImg.width / 2;
+      const snapTop  = rect.top + rect.height / 2 - cableImg.height / 2;
+      cableImg.style.left = snapLeft + 'px';
+      cableImg.style.top  = snapTop + 'px';
+
+      // You might store a “connection” in your code here:
+      const portId = droppedOnPort.dataset.portId;
+      console.log(`Cable connected to ${portId}!`);
+    }
+  }
+});
+
+/* 
+  That’s the basic idea:
+  - We have a background image for the panel,
+  - We have separate images for modules, ports, knobs, etc.
+  - We drag the cable image around. 
+  - If we drop near a port, we snap it there and record a “connection.”
+*/
+
+/*
+  BONUS: If you want a “knob” to rotate, you could do something like:
+
+  document.querySelectorAll('.knob-img').forEach(knob => {
+    let knobAngle = 0;
+    let knobIsDragging = false;
+    let startX = 0;
+
+    knob.addEventListener('mousedown', (event) => {
+      knobIsDragging = true;
+      startX = event.clientX;
+      event.stopPropagation(); // prevent starting cable drag
+    });
+
+    document.addEventListener('mousemove', (event) => {
+      if (knobIsDragging) {
+        const delta = event.clientX - startX;
+        knobAngle += delta;
+        knob.style.transform = 'rotate(' + knobAngle + 'deg)';
+        startX = event.clientX;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      knobIsDragging = false;
+    });
+  });
+*/
+</script>
 </body>
 </html>
