@@ -5,7 +5,7 @@
 :root {
     --bg-color-light: #ffffff;
     --text-color: #000000;
-    --link-color: #832772;
+    --link-color: #a2159b;
     --link-hover-color: #888;
     --blockquote-bg: #f8f8f8;
     --blockquote-border: #ccc;
@@ -18,7 +18,7 @@
     --text-color: #f1f1f1;
     --blockquote-bg: #2e2d2d;
     background-color: #161616;
-    --link-color: #ea7ed6;
+    --link-color: #3dff91;
 
 }
 
@@ -358,7 +358,6 @@ g text {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     padding: 0;
-    font-family: "Courier New", Courier, monospace;
     display: none;
     /* Default hidden */
     top: 10%;
@@ -663,7 +662,7 @@ g text {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Adjust column size for better alignment */
+    grid-template-columns: repeat(auto-fill, minmax( 350px,1fr)); /* Adjust column size for better alignment */
     gap: 10px;
     padding: 20px;
     padding-left: 5px;
@@ -685,7 +684,7 @@ g text {
     position: relative;
     /* background-color: var(--bg-color-light); */
     border: 1px solid  var(--bg-color-light);
-    border-radius: 0px 8px 0px 0px;
+    border-radius: 0px 20px 0px 0px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -705,30 +704,44 @@ g text {
     display: none;
 }
 
+
+.widget:hover{
+    background-color: var(--bg-color-light);
+
+}
+
+
 .grid-item.large:hover {
-    transform: scale(1.05);
-    background:  #cccccc5b;
+    transform: scale(1.02);
+    /* background:  #cccccc5b; */
 }
 
 .grid-item:hover {
-    transform: scale(1.1);
-    background:  #cccccc5b;
+    transform: scale(1.02);
+    /* background:  #cccccc5b; */
 }
+
+
+
     
 
 .grid-item .title {
     display: inline-block;
     position: absolute;
     z-index: 1;
-    background:var(--bg-color-light);
+    /* background:var(--bg-color-light); */
     bottom: 0px;
     width: 80%;
     padding-bottom: 5px;
     padding-top: 2px;
-    font-size: 0.9em;
-    text-align: center;
+    /* font-size: 1.2em; */
+    font-size: calc(1ch + 0.4vw);
+
+    text-align: left;
     line-height: 1.5em;
-    border-radius: 2px 2px 0px 0px;
+    border-radius: 8px 8px 0px 0px;
+    color:white;
+    
 
 }
 /* The typing effect */
@@ -749,6 +762,27 @@ g text {
     display: flex;
     width: calc(100% - 10px);
     /* gap: 1px; */
+}
+
+
+.grid-item .fe-article{
+    background: var(--bg-color-light);
+    position: absolute;
+    top: 30px;
+    width: calc(100% - 30px);
+    text-align: justify;
+    overflow-y:auto;
+    height: 80%;
+    font-size: 17px;
+    text-indent:1.5em;
+    margin-right: 15px;
+
+    padding-right: 15px;
+
+    padding-left: 15px;
+    
+
+
 }
 
 .grid-item .tag {
@@ -775,8 +809,7 @@ g text {
 .grid-container .contentImage{
     position: absolute;
     width: 100%;
-    height: 100%;
-    opacity: 10%;
+    opacity: 60%;
 }
 
 
@@ -810,6 +843,13 @@ g text {
 }
 
 @media (max-width: 768px) {
+
+    .grid-container{
+        grid-template-columns: repeat(auto-fill, minmax( 200px,1fr)); /* Adjust column size for better alignment */
+
+    }
+    
+
     .grid-item.large {
         grid-column: span 1;
         grid-row: span 1;
@@ -818,6 +858,17 @@ g text {
         grid-column: span 1;
         grid-row: span 1;
     }
+
+    .fe-article h1,
+    .fe-article h3{
+        font-size: 1em;
+        text-align: center;
+    }
+    .fe-article p{
+        text-align: justify;
+        text-indent: 0%;
+    }
+
 }
 
 .grid-container::after {
@@ -837,10 +888,17 @@ g text {
     }
 }
 
+
+.widget{
+    background-color: var(--bg-color-light);
+}
+
+
 .time-widget {
     font-size: 1.5rem;
     color: var(--link-color);
     text-align: center;
+    background-color: var(--blockquote-bg);
 }
 
 .weather-widget {
@@ -851,6 +909,8 @@ g text {
     font-size: 1rem;
     color: var(--link-color);
     text-align: center;
+    background-color:var(--blockquote-bg);
+
 }
 
 .weather-widget .icon {
