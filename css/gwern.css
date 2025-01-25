@@ -869,6 +869,17 @@ g text {
         text-indent: 0%;
     }
 
+    .widget{
+        grid-column: span 2;
+        grid-row: span 1;
+
+    }
+    
+    .grid-item.large.widget {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+
 }
 
 .grid-container::after {
